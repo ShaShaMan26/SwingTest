@@ -6,15 +6,18 @@ public class Player extends Component {
     private int xPos;
     private int yPos;
     private final double VELOCITY = 12;
-    int xDirection;
-    int yDirection;
-    private final int PLAYER_HEIGHT = 50;
-    private final int PLAYER_WIDTH = 50;
+    private int xDirection;
+    private int yDirection;
+    private final int PLAYER_HEIGHT;
+    private final int PLAYER_WIDTH;
 
 
-    Player() {
-        xPos = 0;
-        yPos = 0;
+    Player(Dimension windowDimensions) {
+        PLAYER_HEIGHT = windowDimensions.height / 12;
+        PLAYER_WIDTH = windowDimensions.height / 12;
+
+        xPos = (windowDimensions.width / 2) - PLAYER_WIDTH;
+        yPos = (windowDimensions.height / 2) - PLAYER_HEIGHT;
     }
 
     public void setXDirection(int direction) {
