@@ -11,6 +11,7 @@ public class GameInstance {
     GameBoard gameBoard = new GameBoard(WINDOW_DIMENSIONS);
     Player player = new Player(WINDOW_DIMENSIONS);
     PlayerController playerController = new PlayerController(player);
+    Enemy enemy = new Enemy(WINDOW_DIMENSIONS);
     Collectable currentCollectable;
     ScoreDisplay scoreDisplay;
 
@@ -18,6 +19,7 @@ public class GameInstance {
 
     GameInstance() {
         gameBoard.add(player);
+        gameBoard.add(enemy);
         generateNewCollectable();
 
         score = 0;
@@ -53,7 +55,13 @@ public class GameInstance {
             generateNewCollectable();
         }
 
-        // player and window bounds
+        // player and enemy collision
+        if (colliding(player.xPos, player.xPos + player.PLAYER_WIDTH, enemy.xPos, enemy.xPos + enemy.ENEMY_WIDTH)
+                && colliding(player.yPos, player.yPos + player.PLAYER_HEIGHT, enemy.yPos, enemy.yPos + enemy.ENEMY_HEIGHT)) {
+            System.exit(1);
+        }
+
+        // player and window bounds collision
         int nextXPos = (int)(player.xDirection*player.VELOCITY + player.xPos);
         if (nextXPos < 0 || nextXPos + player.PLAYER_WIDTH > WINDOW_DIMENSIONS.width) {
             player.setXDirection(0);
@@ -62,6 +70,29 @@ public class GameInstance {
         if (nextYPos < 0 || nextYPos + player.PLAYER_HEIGHT > WINDOW_DIMENSIONS.height) {
             player.setYDirection(0);
         }
+
+        // enemy and window bounds collision
+        nextXPos = (int)(enemy.xDirection*enemy.velocity + enemy.xPos);
+        if (nextXPos < 0) {
+            enemy.setXDirection(1);
+            enemy.setRandomVelocity();
+        } else if (nextXPos + enemy.ENEMY_WIDTH > WINDOW_DIMENSIONS.width) {
+            enemy.setXDirection(-1);
+            enemy.setRandomVelocity();
+        }
+        nextYPos = (int)(enemy.yDirection*enemy.velocity + enemy.yPos);
+        if (nextYPos < 0) {
+            enemy.setYDirection(1);
+            enemy.setRandomVelocity();
+        } else if (nextYPos + enemy.ENEMY_HEIGHT > WINDOW_DIMENSIONS.height) {
+            enemy.setYDirection(-1);
+            enemy.setRandomVelocity();
+        }
+    }
+
+    public void makeMoves() {
+        player.move();
+        enemy.move();
     }
 
     public void run() {
@@ -76,7 +107,7 @@ public class GameInstance {
             if (delta >= 1) {
                 gameWindow.repaint();
                 checkCollisions();
-                player.move();
+                makeMoves();
                 delta--;
             }
         }
