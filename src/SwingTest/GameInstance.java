@@ -7,26 +7,33 @@ public class GameInstance {
     private final Dimension WINDOW_DIMENSIONS = new Dimension(SCREEN_DIMENSIONS.width, SCREEN_DIMENSIONS.height);
 
     MetaActionListener metaActionListener = new MetaActionListener();
-
     GameWindow gameWindow = new GameWindow(WINDOW_DIMENSIONS);
     GameBoard gameBoard = new GameBoard(WINDOW_DIMENSIONS);
     Player player = new Player(WINDOW_DIMENSIONS);
     PlayerController playerController = new PlayerController(player);
     Collectable currentCollectable;
+    ScoreDisplay scoreDisplay;
 
-    private int score = 0;
+    private int score;
 
     GameInstance() {
         gameBoard.add(player);
         generateNewCollectable();
+
+        score = 0;
+        scoreDisplay = new ScoreDisplay(WINDOW_DIMENSIONS);
+        gameBoard.add(scoreDisplay);
+
+        gameWindow.add(gameBoard);
+
         gameWindow.addKeyListener(metaActionListener);
         gameWindow.addKeyListener(playerController);
-        gameWindow.add(gameBoard);
     }
 
     public void collectCollectable() {
         gameBoard.remove(currentCollectable);
         score++;
+        scoreDisplay.setScore(score);
     }
 
     public void generateNewCollectable() {
@@ -58,20 +65,21 @@ public class GameInstance {
     }
 
     public void run() {
-    long lastTime = System.nanoTime();
-    double amountOfTicks = 60.0;
-    double ns = 1000000000 / amountOfTicks;
-    double delta = 0;
-    while(true) {
-        long now = System.nanoTime();
-        delta += (now -lastTime)/ns;
-        lastTime = now;
-        if(delta >= 1) {
-            gameWindow.repaint();
-            checkCollisions();
-            player.move();
-            delta--;
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        while (true) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            if (delta >= 1) {
+                gameWindow.repaint();
+                checkCollisions();
+                player.move();
+                delta--;
+            }
         }
     }
 }
-}
+

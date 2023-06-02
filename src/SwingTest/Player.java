@@ -16,8 +16,8 @@ public class Player extends Component {
         PLAYER_HEIGHT = windowDimensions.height / 12;
         PLAYER_WIDTH = windowDimensions.height / 12;
 
-        xPos = (windowDimensions.width / 2) - PLAYER_WIDTH;
-        yPos = (windowDimensions.height / 2) - PLAYER_HEIGHT;
+        xPos = (windowDimensions.width / 2) - (PLAYER_WIDTH / 2);
+        yPos = (windowDimensions.height / 2) - (PLAYER_HEIGHT / 2);
     }
 
     public void setXDirection(int direction) {
