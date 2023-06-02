@@ -3,13 +3,13 @@ package SwingTest;
 import java.awt.*;
 
 public class Player extends Component {
-    private int xPos;
-    private int yPos;
-    private final double VELOCITY = 12;
-    private int xDirection;
-    private int yDirection;
-    private final int PLAYER_HEIGHT;
-    private final int PLAYER_WIDTH;
+    int xPos;
+    int yPos;
+    final double VELOCITY = 12;
+    int xDirection;
+    int yDirection;
+    final int PLAYER_HEIGHT;
+    final int PLAYER_WIDTH;
 
 
     Player(Dimension windowDimensions) {

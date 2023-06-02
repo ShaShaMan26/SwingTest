@@ -3,10 +3,10 @@ package SwingTest;
 import java.awt.*;
 
 public class Collectable extends Component {
-    private int xPos;
-    private int yPos;
-    private final int COLLECTABLE_HEIGHT;
-    private final int COLLECTABLE_WIDTH;
+    int xPos;
+    int yPos;
+    final int COLLECTABLE_HEIGHT;
+    final int COLLECTABLE_WIDTH;
 
     Collectable(Dimension windowDimensions) {
         COLLECTABLE_HEIGHT = windowDimensions.height / 15;
