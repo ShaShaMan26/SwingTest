@@ -12,15 +12,15 @@ public class GameInstance {
     Player player = new Player(WINDOW_DIMENSIONS);
     PlayerController playerController = new PlayerController(player);
     Enemy enemy = new Enemy(WINDOW_DIMENSIONS);
-    Collectable currentCollectable;
+    Collectable collectable = new Collectable(WINDOW_DIMENSIONS);
     ScoreDisplay scoreDisplay;
 
     private int score;
 
     GameInstance() {
+        gameBoard.add(collectable);
         gameBoard.add(player);
         gameBoard.add(enemy);
-        generateNewCollectable();
 
         score = 0;
         scoreDisplay = new ScoreDisplay(WINDOW_DIMENSIONS);
@@ -33,14 +33,9 @@ public class GameInstance {
     }
 
     public void collectCollectable() {
-        gameBoard.remove(currentCollectable);
         score++;
         scoreDisplay.setScore(score);
-    }
-
-    public void generateNewCollectable() {
-        currentCollectable = new Collectable(WINDOW_DIMENSIONS);
-        gameBoard.add(currentCollectable);
+        collectable.setRandomPos(WINDOW_DIMENSIONS);
     }
 
     private boolean colliding(int item1Start, int item1End, int item2Start, int item2End) {
@@ -49,16 +44,16 @@ public class GameInstance {
 
     public void checkCollisions() {
         // player and collectable collision
-        if (colliding(currentCollectable.xPos, currentCollectable.xPos + currentCollectable.COLLECTABLE_WIDTH, player.xPos, player.xPos + player.PLAYER_WIDTH)
-                && colliding(currentCollectable.yPos, currentCollectable.yPos + currentCollectable.COLLECTABLE_HEIGHT, player.yPos, player.yPos + player.PLAYER_HEIGHT)) {
+        if (colliding(collectable.xPos, collectable.xPos + collectable.COLLECTABLE_WIDTH, player.xPos, player.xPos + player.PLAYER_WIDTH)
+                && colliding(collectable.yPos, collectable.yPos + collectable.COLLECTABLE_HEIGHT, player.yPos, player.yPos + player.PLAYER_HEIGHT)) {
             collectCollectable();
-            generateNewCollectable();
         }
 
         // player and enemy collision
         if (colliding(player.xPos, player.xPos + player.PLAYER_WIDTH, enemy.xPos, enemy.xPos + enemy.ENEMY_WIDTH)
                 && colliding(player.yPos, player.yPos + player.PLAYER_HEIGHT, enemy.yPos, enemy.yPos + enemy.ENEMY_HEIGHT)) {
-            System.exit(1);
+            score = 0;
+            scoreDisplay.setScore(score);
         }
 
         // player and window bounds collision

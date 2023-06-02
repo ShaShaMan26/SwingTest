@@ -16,6 +16,11 @@ public class Collectable extends Component {
         this.yPos = (int)(Math.random() * (windowDimensions.height - COLLECTABLE_HEIGHT) + 1);
     }
 
+    public void setRandomPos(Dimension windowDimensions) {
+        this.xPos = (int)(Math.random() * (windowDimensions.width - COLLECTABLE_WIDTH) + 1);
+        this.yPos = (int)(Math.random() * (windowDimensions.height - COLLECTABLE_HEIGHT) + 1);
+    }
+
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.ORANGE);
