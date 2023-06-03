@@ -6,7 +6,7 @@ import java.awt.*;
 public class GameWindow extends JFrame {
 
     GameWindow(Dimension windowDimensions) {
-        this.setTitle("SwingTest");
+        this.setTitle("Block Boy");
         this.setSize(windowDimensions);
         this.setResizable(false);
         this.setLayout(null);

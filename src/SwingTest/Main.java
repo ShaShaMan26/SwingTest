@@ -1,8 +1,12 @@
 package SwingTest;
 
 public class Main {
+    public static GameInstance gameInstance = new GameInstance();
     public static void main(String[] args) {
-        GameInstance currentGameInstance = new GameInstance();
-        currentGameInstance.run();
+
+        MetaActionListener metaActionListener = new MetaActionListener(gameInstance);
+        gameInstance.gameWindow.addKeyListener(metaActionListener);
+
+        gameInstance.run();
     }
 }

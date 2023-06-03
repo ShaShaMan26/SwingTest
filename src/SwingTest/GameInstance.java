@@ -3,91 +3,22 @@ package SwingTest;
 import java.awt.*;
 
 public class GameInstance {
-    private final Dimension SCREEN_DIMENSIONS = Toolkit.getDefaultToolkit().getScreenSize();
-    private final Dimension WINDOW_DIMENSIONS = new Dimension(SCREEN_DIMENSIONS.width, SCREEN_DIMENSIONS.height);
-
-    MetaActionListener metaActionListener = new MetaActionListener();
+    private final Dimension WINDOW_DIMENSIONS = Toolkit.getDefaultToolkit().getScreenSize();
     GameWindow gameWindow = new GameWindow(WINDOW_DIMENSIONS);
     GameBoard gameBoard = new GameBoard(WINDOW_DIMENSIONS);
-    Player player = new Player(WINDOW_DIMENSIONS);
-    PlayerController playerController = new PlayerController(player);
-    Enemy enemy = new Enemy(WINDOW_DIMENSIONS);
-    Collectable collectable = new Collectable(WINDOW_DIMENSIONS);
-    ScoreDisplay scoreDisplay;
-
-    private int score;
 
     GameInstance() {
-        gameBoard.add(collectable);
-        gameBoard.add(player);
-        gameBoard.add(enemy);
+        gameWindow.add(gameBoard);
+        gameWindow.addKeyListener(gameBoard.playerController);
+    }
 
-        score = 0;
-        scoreDisplay = new ScoreDisplay(WINDOW_DIMENSIONS);
-        gameBoard.add(scoreDisplay);
+    public void newGame() {
+        gameWindow.remove(gameBoard);
+
+        gameBoard = new GameBoard(WINDOW_DIMENSIONS);
 
         gameWindow.add(gameBoard);
-
-        gameWindow.addKeyListener(metaActionListener);
-        gameWindow.addKeyListener(playerController);
-    }
-
-    public void collectCollectable() {
-        score++;
-        scoreDisplay.setScore(score);
-        collectable.setRandomPos(WINDOW_DIMENSIONS);
-    }
-
-    private boolean colliding(int item1Start, int item1End, int item2Start, int item2End) {
-        return (item2Start <= item1Start && item1Start <= item2End) || (item2Start <= item1End && item1End <= item2End);
-    }
-
-    public void checkCollisions() {
-        // player and collectable collision
-        if (colliding(collectable.xPos, collectable.xPos + collectable.COLLECTABLE_WIDTH, player.xPos, player.xPos + player.PLAYER_WIDTH)
-                && colliding(collectable.yPos, collectable.yPos + collectable.COLLECTABLE_HEIGHT, player.yPos, player.yPos + player.PLAYER_HEIGHT)) {
-            collectCollectable();
-        }
-
-        // player and enemy collision
-        if (colliding(player.xPos, player.xPos + player.PLAYER_WIDTH, enemy.xPos, enemy.xPos + enemy.ENEMY_WIDTH)
-                && colliding(player.yPos, player.yPos + player.PLAYER_HEIGHT, enemy.yPos, enemy.yPos + enemy.ENEMY_HEIGHT)) {
-            score = 0;
-            scoreDisplay.setScore(score);
-        }
-
-        // player and window bounds collision
-        int nextXPos = (int)(player.xDirection*player.VELOCITY + player.xPos);
-        if (nextXPos < 0 || nextXPos + player.PLAYER_WIDTH > WINDOW_DIMENSIONS.width) {
-            player.setXDirection(0);
-        }
-        int nextYPos = (int)(player.yDirection*player.VELOCITY + player.yPos);
-        if (nextYPos < 0 || nextYPos + player.PLAYER_HEIGHT > WINDOW_DIMENSIONS.height) {
-            player.setYDirection(0);
-        }
-
-        // enemy and window bounds collision
-        nextXPos = (int)(enemy.xDirection*enemy.velocity + enemy.xPos);
-        if (nextXPos < 0) {
-            enemy.setXDirection(1);
-            enemy.setRandomVelocity();
-        } else if (nextXPos + enemy.ENEMY_WIDTH > WINDOW_DIMENSIONS.width) {
-            enemy.setXDirection(-1);
-            enemy.setRandomVelocity();
-        }
-        nextYPos = (int)(enemy.yDirection*enemy.velocity + enemy.yPos);
-        if (nextYPos < 0) {
-            enemy.setYDirection(1);
-            enemy.setRandomVelocity();
-        } else if (nextYPos + enemy.ENEMY_HEIGHT > WINDOW_DIMENSIONS.height) {
-            enemy.setYDirection(-1);
-            enemy.setRandomVelocity();
-        }
-    }
-
-    public void makeMoves() {
-        player.move();
-        enemy.move();
+        gameWindow.addKeyListener(gameBoard.playerController);
     }
 
     public void run() {
@@ -99,10 +30,10 @@ public class GameInstance {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
-            if (delta >= 1) {
+            if (delta >= 1 && gameBoard.running) {
                 gameWindow.repaint();
-                checkCollisions();
-                makeMoves();
+                gameBoard.checkCollisions();
+                gameBoard.makeMoves();
                 delta--;
             }
         }

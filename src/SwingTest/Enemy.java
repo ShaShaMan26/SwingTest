@@ -19,8 +19,8 @@ public class Enemy extends Component {
         this.xPos = (int)(Math.random() * (windowDimensions.width - ENEMY_WIDTH) + 1);
         this.yPos = (int)(Math.random() * (windowDimensions.height - ENEMY_HEIGHT) + 1);
 
-        setXDirection(1);
-        setYDirection(1);
+        setXDirection(-1);
+        setYDirection(-1);
     }
 
     public void setRandomVelocity() {
