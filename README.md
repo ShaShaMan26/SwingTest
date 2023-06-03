@@ -11,3 +11,4 @@
 
 **Things to note**
  - Red circle can spawn on blue box and end game before it starts. Reset game with 'r' key if this happens.
+ - Red circle hitbox is a bit off and also a square, not a circle.
